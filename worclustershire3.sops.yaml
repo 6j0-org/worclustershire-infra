@@ -65,8 +65,6 @@ machine:
         modules:
             - name: ENC[AES256_GCM,data:u5c+PwYloo4=,iv:5xhDk/8fCL4+h0NAfXLED1Zae9WENbTFXW+AElGfjCo=,tag:4CwKlNNZIVGukpXND/T8JA==,type:str]
             - name: ENC[AES256_GCM,data:igYjvSBe3oI=,iv:27Dyl3XGH5j9sbAcUhEK1g1FGlrcZ6+Witm32d9RSx0=,tag:f2P+lMvsLsvfGyf6gfAm7Q==,type:str]
-    nodeLabels:
-        node.kubernetes.io/exclude-from-external-load-balancers: ""
 cluster:
     id: ENC[AES256_GCM,data:D7QkmJYmT1Jupfu9GT/MyEA1sS/qeeZ/zK56ZvZgBeLWBKWSNY2T6DiuRvM=,iv:2B7IblCoGYTTjM/QUKI1W6RRetpREk3hGsGIpOZiWJ8=,tag:0+FImC86nVV9q8W8x3VKUw==,type:str]
     secret: ENC[AES256_GCM,data:hMs8fAfDU8zQTid3qEdAi58Zv493LvF3L+1K3sqhJ9MpX2ClBsLYeeioMH8=,iv:4CZtsHwv+1haMej9Sjotsfaag1rx1uQfqZWQzLF97bQ=,tag:hUP2iZQqzDs6YThVI6Blhw==,type:str]
@@ -144,7 +142,7 @@ sops:
             eXZ4OUpSclkrL3Y2NnZQQkZBWjgydHMKWyGDecWtpCoKs9S5+64lPT2kIb6lqw68
             TlXaI5SyZg7Pb6zYGcSE+dHVHVKJhir1H5o81NB3KYHic90kYcABiA==
             -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2025-12-11T04:12:06Z"
-    mac: ENC[AES256_GCM,data:vVH9SDUNAC95j8aGc9oaK9X1L3H4n1sW2kPQeBLyylVdUMOVnc7XjhnA00mFRtncR1hfuFJEGx+hGzLWKayZq8ggOwozUEVch3oJHrFstirVJhq2rz2I5N79E1hGttbA3GtFn07yrfWaroCl/pWjBvv3qYYfo5FTu6Xhy9OJJHM=,iv:iLmtCsirZuC4p6z9F86M//oAWeslxlqRlDTcOu1RN7E=,tag:bK14aBKTrY4pYBDSVxJ0qw==,type:str]
+    lastmodified: "2026-01-05T02:02:55Z"
+    mac: ENC[AES256_GCM,data:ssC8V7hwlRK1orEXNRc8oetqYuH14QYWvFidmTXO4jBYfAM0QNhO/0R5nH5Zy0rOTBe/wxzbqPKpRKcW+Wpl3i8syUFsrmRLYPzOdyWUE7b5u+DEpZIVHI+D76Q/y2h/DeH42X6f0n8BB0M4TzWrEC5060Bcg9irRX5jUpa1ygk=,iv:F2n0VNkVwltcQKHGgkcVPiL8PBE6oyS1QmTid5YaarI=,tag:qz9rNDyJBCGDGXlNZ4ixww==,type:str]
     unencrypted_suffix: _unencrypted
     version: 3.11.0

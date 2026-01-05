@@ -44,8 +44,6 @@ machine:
         hostDNS:
             enabled: ENC[AES256_GCM,data:KaBJOg==,iv:2jjxwZWdUdOIUd1k+ThF8psN9GLzqYn8HAmfo08xjLI=,tag:RZvjJjZBMI2bP92uLT5/sg==,type:bool]
             forwardKubeDNSToHost: ENC[AES256_GCM,data:DalPKw==,iv:xgPUTvQITLvZrxzD9foLzo0oI/iqNRCkQg1m7yUIwq8=,tag:wvZaF/QVnesKkdo6VhoFGg==,type:bool]
-    nodeLabels:
-        node.kubernetes.io/exclude-from-external-load-balancers: ""
 cluster:
     id: ENC[AES256_GCM,data:ppC/uEngmv3Ey81BWkLh+ad4NCD8mmFF4oXckKNIam+uDBuAwu8UWCRtr3w=,iv:thI+Jpi9SL+0+nPhCB41Me4mJ/JHG1d16/egbBic/fQ=,tag:8KihGzu2X2nnlxVtavVESw==,type:str]
     secret: ENC[AES256_GCM,data:kSbxiczUvr6RAAtDTHFB+VsbYPvs6VW1DvQKHcw7gQw4Yaa5UtFJ2xm/H+U=,iv:OwMU20RljfytY0VSgryq35bPcYd5VA81TvC0ro0+znQ=,tag:rNhfXoQhuwKaBrvZ6PleLA==,type:str]
@@ -123,7 +121,7 @@ sops:
             ZnR4aTlqbGRGWjhmeG9DYlc4NHNBL0UK93oJGpJILpe5XlWasCyaO6YF3fIeWhMa
             PtfFpJuAObbrEC1QinX5rAd9/6+5eps7OAEfS3yHElE5xsbjWYyEqA==
             -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2025-12-11T04:09:59Z"
-    mac: ENC[AES256_GCM,data:6YQEbiSbIpH5JBCG8rPonw1ZNDo6fEZpUOZlVVjTr6G+ZSAIVDjfBjyb2GVGnbWM8ZPtrp9X3MbFXv684aozS+WPBXtxB0d9mwYoy3Wu4VjpaGSxmnQIw91SgqocG3bZ7nsMXgV0iazUsUD1eFipddCyYGjmMrSGFaNAn+c+qxs=,iv:uWOlKQ+TcIIkXYHFkyKTw0tnUchmor98kVpZG5cIW60=,tag:5BReJItSmzAXfL6rllEHGw==,type:str]
+    lastmodified: "2026-01-05T02:01:56Z"
+    mac: ENC[AES256_GCM,data:Q9CrHZEKurzyAVwaS2A62BydOdH8e/0lNiP7S6FeC0cOKDxh0sRl3ivz5bG/7MA6mQoIgwv+MQlzKcf0QRDAVqgVyFClmYSkHh986rjJnWJuFAQOGimvnKoTNRwVPtBHgv67anE6/WtPlk8YJmTsaoQ+HoriQ/fK+UCe33yycXE=,iv:wEXrjDurmJ6kLmMp2MKdR9AEXn52xyv/KdM5bq63yOY=,tag:bgt3XVnkSU7x0D6HdsbWtw==,type:str]
     unencrypted_suffix: _unencrypted
     version: 3.11.0

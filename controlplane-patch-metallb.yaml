@@ -1,0 +1,6 @@
+# Have to remove this label for metallb to work.
+# https://docs.siderolabs.com/talos/v1.12/deploy-and-manage-workloads/workers-on-controlplane#load-balancer-configuration
+machine:
+  nodeLabels:
+    node.kubernetes.io/exclude-from-external-load-balancers:
+      $patch: delete

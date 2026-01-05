@@ -65,6 +65,10 @@ Based on:
       ```
       talosctl machineconfig patch controlplane.yaml --patch @controlplane-patch-allowSchedulingOnControlPlanes.yaml --output controlplane.yaml
       ```
+   1. Allow MetalLB to use controlplanes as LoadBalancers:
+      ```
+      talosctl machineconfig patch controlplane.yaml --patch @controlplane-patch-metallb.yaml --output controlplane.yaml
+      ```
    1. Add cluster_endpoint_ip as a VIP:
       ```
       talosctl machineconfig patch controlplane.yaml --patch @controlplane-patch-vip.yaml --output controlplane.yaml
@@ -118,8 +122,8 @@ Based on:
    ```
 1. Apply config:
    ```
-   talosctl apply-config --insecure -n 192.168.8.163 -e 192.168.8.4 -f worclustershire2.yaml
-   talosctl apply-config --insecure -n 192.168.8.216 -e 192.168.8.4 -f worclustershire3.yaml
+   talosctl apply-config --insecure -n 192.168.8.163 -e 192.168.8.4 -f <(sops -d worclustershire2.sops.yaml)
+   talosctl apply-config --insecure -n 192.168.8.216 -e 192.168.8.4 -f <(sops -d worclustershire3.sops.yaml)
    ```
 1. Upgrade nodes so they have the proper extensions. See the Upgrading Talos section below.
 1. Add the other nodes to the VIP???
