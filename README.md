@@ -45,6 +45,7 @@ Based on:
      - 1st drive: 5G
      - 2nd drive: 500G
    - CPU:
+     - Type: Host (all the way at the bottom)
      - Cores: 2
    - Memory: as much as possible, but reserve at least 1GB for the ProxMox host.
    - Confirm:
