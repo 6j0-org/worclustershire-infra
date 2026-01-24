@@ -74,6 +74,10 @@ Based on:
       ```
       talosctl machineconfig patch controlplane.yaml --patch @controlplane-patch-vip.yaml --output controlplane.yaml
       ```
+   1. Add metrics-server:
+      ```
+      talosctl machineconfig patch controlplane.yaml --patch @metrics-server.yaml --output controlplane.yaml
+      ```
    1. Create config for first node:
       ```
       talosctl machineconfig patch controlplane.yaml --patch @controlplane-patch-worclustershire1.yaml --output worclustershire1.yaml
@@ -169,4 +173,19 @@ Based on:
 
 ```
 talosctl upgrade --image factory.talos.dev/nocloud-installer-secureboot/88d1f7a5c4f1d3aba7df787c448c1d3d008ed29cfb34af53fa0df4336a56040b:v1.11.5 --nodes "${node_ip}" --preserve
+```
+
+# Troubleshooting
+
+Created an A record worclustershire.6j0.org with IPs for all of the nodes.
+
+Trying to update endpointis to be HA. Did this for each node, then edited by ~/.kube/worclustershire.
+```
+talosctl patch mc --endpoints=192.168.8.4 --nodes 192.168.8.5   --mode=no-reboot   --patch '{
+    "cluster": {
+      "controlPlane": {
+        "endpoint": "https://worclustershire.6j0.org:6443"
+      }
+    }
+  }' --talosconfig <(sops -d talosconfig.sops.yaml)
 ```
