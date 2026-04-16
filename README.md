@@ -189,3 +189,11 @@ talosctl patch mc --endpoints=192.168.8.4 --nodes 192.168.8.5   --mode=no-reboot
     }
   }' --talosconfig <(sops -d talosconfig.sops.yaml)
 ```
+
+# Applying code after bootstrap
+
+```
+talosctl apply-config --talosconfig <(sops -d talosconfig.sops.yaml) -n 192.168.8.4 -e 192.168.8.4 -f <(sops -d worclustershire1.sops.yaml) && \
+talosctl apply-config --talosconfig <(sops -d talosconfig.sops.yaml) -n 192.168.8.5 -e 192.168.8.5 -f <(sops -d worclustershire2.sops.yaml) && \
+talosctl apply-config --talosconfig <(sops -d talosconfig.sops.yaml) -n 192.168.8.6 -e 192.168.8.6 -f <(sops -d worclustershire3.sops.yaml)
+```
