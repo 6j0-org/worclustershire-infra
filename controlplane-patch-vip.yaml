@@ -8,3 +8,4 @@ machine:
           busPath: "0*" # should select any hardware network device, if you have just one, it will be selected
         vip:
           ip: 192.168.8.7
+          ipv6: 2603:8001:5800:8cf::7
