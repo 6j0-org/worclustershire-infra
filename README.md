@@ -197,3 +197,15 @@ talosctl apply-config --talosconfig <(sops -d talosconfig.sops.yaml) -n 192.168.
 talosctl apply-config --talosconfig <(sops -d talosconfig.sops.yaml) -n 192.168.8.5 -e 192.168.8.5 -f <(sops -d worclustershire2.sops.yaml) && \
 talosctl apply-config --talosconfig <(sops -d talosconfig.sops.yaml) -n 192.168.8.6 -e 192.168.8.6 -f <(sops -d worclustershire3.sops.yaml)
 ```
+
+# Decrypt all
+
+```
+for f in *.sops.yaml; do sops -d -i "$f"; done
+```
+
+# Encrypt all
+
+```
+for f in *.sops.yaml; do sops -e -i "$f"; done
+```
