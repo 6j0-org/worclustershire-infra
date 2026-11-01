@@ -125,10 +125,14 @@ Read those comments before editing either workflow — the settings are intentio
 
 ## Host notes
 
-`README.lorcan.md` documents an e1000e NIC hardware hang on the `lorcan` host, worked around with an
-`ethtool -K nic0 tso off gso off` post-up line in `/etc/network/interfaces`.
+Each node is VM 100 on its own single-disk Proxmox host:
 
-`README.ilona.md` documents the `ilona` host (192.168.8.8, VM 100 = `worclustershire3`): its `local-lvm` thin
-pool must stay larger than the VM disk, `scsi0` has `discard=on`, and TRIM still doesn't pass through Talos's
-LUKS volumes on v1.11 (`encryption.allowDiscards` needs a newer Talos). Recovery procedure for a full pool is in
-`runbooks/thin-pool-full.md`.
+| Host     | IP          | VM                 | Notes                                                                                                                          |
+| -------- | ----------- | ------------------ | ------------------------------------------------------------------------------------------------------------------------------ |
+| `basima` | 192.168.8.3 | `worclustershire1` | `README.basima.md`                                                                                                             |
+| `lorcan` | 192.168.8.9 | `worclustershire2` | `README.lorcan.md` - also an e1000e NIC hang worked around with `ethtool -K nic0 tso off gso off` in `/etc/network/interfaces` |
+| `ilona`  | 192.168.8.8 | `worclustershire3` | `README.ilona.md` - the full write-up                                                                                          |
+
+On all three, the `local-lvm` thin pool must stay larger than the 800G VM disk, and `scsi0` has (or has pending)
+`discard=on,ssd=1`. TRIM still doesn't pass through Talos's LUKS volumes on v1.11 (`encryption.allowDiscards`
+needs a newer Talos). Recovery procedure for a full pool is in `runbooks/thin-pool-full.md`.
