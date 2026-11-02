@@ -2,6 +2,12 @@
 
 # Overview
 
+> **Since the move to OpenTofu (2026-11), the provider renews both certificates.** `talos_machine_secrets`
+> regenerates the Talos client cert, and `talos_cluster_kubeconfig` the Kubernetes one, within a month of expiry,
+> on any plan or apply. Copies you exported with `tofu output` don't renew themselves. If access breaks, run a
+> plan/apply and re-export (README.md → talosconfig and kubeconfig). The procedure below still applies to the
+> break-glass `talosconfig.sops.yaml`, and to rebuilding access when the OpenTofu state is unavailable.
+
 Talos issues two long-lived *client* certificates when the cluster is first generated, and **neither one
 auto-rotates**:
 

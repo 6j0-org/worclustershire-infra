@@ -1,0 +1,33 @@
+# Arch Linux package list for worclustershire-infra — the pacman/AUR equivalent of
+# the Brewfile. Installs every CLI tool used or referenced by this repo.
+#
+# Requires an AUR helper (yay or paru) because tenv-bin is an AUR package;
+# everything else is in the official repos.
+#
+# Usage:
+#   grep -vE '^(#|$)' pkglist.txt | yay -S --needed -
+#   grep -vE '^(#|$)' pkglist.txt | paru -S --needed -
+
+# tenv — AUR; provides `tofu` from cluster/.opentofu-version. Do NOT install
+# opentofu directly. Used for `tofu init/plan/apply` and cluster/update_opentofu.sh.
+tenv-bin
+
+# talosctl — operating the nodes after OpenTofu has built them: health checks,
+# logs, dashboards. The docs target Talos v1.11.x.
+talosctl
+
+# kubectl — merging kubeconfigs and using the cluster
+kubectl
+
+# sops — decrypts secrets.sops.yaml (the cluster secrets backup and import
+# source) and talosconfig.sops.yaml (break-glass talosctl access)
+sops
+
+# zizmor — GitHub Actions workflow auditing, referenced in .github/workflows/opentofu-talos.yml
+zizmor
+
+# Optional — only for the virt-manager (QEMU/KVM) path instead of ProxMox.
+# Uncomment to install:
+# virt-manager
+# swtpm
+# networkmanager

@@ -1,0 +1,12 @@
+# https://kubernetes.io/docs/reference/config-api/kubelet-config.v1beta1/
+# https://www.talos.dev/v1.11/reference/configuration/v1alpha1/config/#Config.machine.kubelet
+#
+# Start image garbage collection at 70% disk use and clean down to 60%, below
+# the kubelet defaults of 85/80. Found applied by hand on all three nodes on
+# 2026-11-04; the reason wasn't recorded.
+
+machine:
+  kubelet:
+    extraConfig:
+      imageGCHighThresholdPercent: 70
+      imageGCLowThresholdPercent: 60

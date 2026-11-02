@@ -94,9 +94,17 @@ what you're updating:
   Rebooting a host without draining first is what happened on ilona on 2026-11-02 01:20 UTC: the immich database
   crash-recovered, and every volume was degraded until the replicas were rebuilt.
 
-- **Talos:** do node-restart steps 1-2, then run the upgrade from README.md → Upgrading Talos
-  (`talosctl upgrade ... --preserve`, one minor version at a time). The node reboots itself. Continue with
-  node-restart steps 4-6.
+- **Talos:** do node-restart step 1 (CloudNativePG maintenance window). Then bump `talos_version` in
+  `cluster/terraform.tfvars` (one minor version at a time) and apply with `-parallelism=1`, as in README.md →
+  Upgrading Talos. OpenTofu does the drain (step 2), the reboot and the uncordon itself, one node after another,
+  so it doesn't wait for the volume health check between nodes. To keep that check, target one node per apply:
+  `tofu apply -parallelism=1 -target='talos_machine.node["worclustershire1"]'`, then the next. The drain is
+  Talos's own; like `kubectl drain`, it retries evictions blocked by PDBs, but it can't force-delete a stuck pod.
+  Watch `kubectl get pods -A --field-selector spec.nodeName=<node>` in another terminal and handle stuck pods as
+  in node-restart step 2. Continue with node-restart steps 5-6.
+
+- **Kubernetes:** bump `kubernetes_version` and apply (README.md → Upgrading Kubernetes). `upgrade-k8s` restarts
+  the control-plane components and each kubelet in turn, but doesn't reboot the VMs or drain nodes.
 
 - **Proxmox VM config** (anything `qm pending 100` shows): node-restart as written.
 

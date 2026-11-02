@@ -1,0 +1,19 @@
+# https://kubernetes.io/docs/concepts/services-networking/dual-stack/
+# https://www.talos.dev/v1.11/talos-guides/network/ipv6/
+#
+# Dual-stack pod and service ranges, added 2026-04 for the dual-stack Envoy
+# Gateway (see ipv6-problems.txt in worclustershire-deploy). This patch
+# *replaces* the generated lists rather than appending to them, so the IPv4
+# defaults must stay listed first. Dropping them would make the cluster
+# IPv6-only. Changing the service subnets on a running cluster is disruptive.
+# Don't edit these casually. Each node's IPv6 address is the `ipv6` field in
+# `nodes`.
+
+cluster:
+  network:
+    podSubnets:
+      - 10.244.0.0/16
+      - fd00:0:0:1::/64
+    serviceSubnets:
+      - 10.96.0.0/12
+      - fd00:0:0:2::/108
