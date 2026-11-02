@@ -133,6 +133,8 @@ Each node is VM 100 on its own single-disk Proxmox host:
 | `lorcan` | 192.168.8.9 | `worclustershire2` | `README.lorcan.md` - also an e1000e NIC hang worked around with `ethtool -K nic0 tso off gso off` in `/etc/network/interfaces` |
 | `ilona`  | 192.168.8.8 | `worclustershire3` | `README.ilona.md` - the full write-up                                                                                          |
 
-On all three, the `local-lvm` thin pool must stay larger than the 800G VM disk, and `scsi0` has (or has pending)
-`discard=on,ssd=1`. TRIM still doesn't pass through Talos's LUKS volumes on v1.11 (`encryption.allowDiscards`
-needs a newer Talos). Recovery procedure for a full pool is in `runbooks/thin-pool-full.md`.
+On all three, the `local-lvm` thin pool must stay larger than the 800G VM disk, and `scsi0` has `discard=on,ssd=1`
+(applied on all three as of 2026-11-01). TRIM still doesn't pass through Talos's LUKS volumes on v1.11
+(`encryption.allowDiscards` needs a newer Talos). Recovery procedure for a full pool is in
+`runbooks/thin-pool-full.md`. Planned VM restarts (drain, single-instance CloudNativePG `nodeMaintenanceWindow`,
+`qm shutdown; qm start`) are in `runbooks/node-restart.md`.

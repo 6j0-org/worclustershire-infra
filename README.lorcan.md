@@ -37,8 +37,8 @@ lvextend -L +15G pve/data        # 794.3G -> 809.3G
 qm set 100 --scsi0 local-lvm:vm-100-disk-1,iothread=1,size=800G,discard=on,ssd=1
 ```
 
-**`discard=on,ssd=1` is pending** until VM 100 is next stopped and started (a reboot from inside the guest
-isn't enough). Check with `qm pending 100 | grep scsi0`. It frees nothing until Talos allows discards through
+`discard=on,ssd=1` was applied by a VM stop/start on 2026-11-01 (see
+[runbooks/node-restart.md](runbooks/node-restart.md)); the guest's `sda` now reports discard support. It frees nothing until Talos allows discards through
 LUKS, but it needs to be in place first.
 
 # History
@@ -46,3 +46,4 @@ LUKS, but it needs to be in place first.
 | Date (UTC) | Event                                                                                                    |
 | ---------- | -------------------------------------------------------------------------------------------------------- |
 | 2026-11-01 | Found pool 794.3G < 800G disk, 79% used; extended to 809.3G; `discard=on,ssd=1` queued (pending restart) |
+| 2026-11-01 | VM 100 stopped/started; `discard=on,ssd=1` now active                                                    |
