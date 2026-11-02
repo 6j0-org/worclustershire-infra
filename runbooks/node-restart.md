@@ -107,29 +107,30 @@ A plain `qm shutdown && qm start` is not enough, because of two things:
   snapshot whose checksum matches on both sides, so only data written since that snapshot is copied. On
   2026-11-02, `immich-library-pvc` rebuilt in **5 seconds** with a checksum on its 465GiB snapshot,
   against about an hour without one, when every block is compared over the 1Gbps LAN.
-- **When checksums are calculated.** `snapshot-data-integrity-cronjob` is `0 0 */7 * *`, in UTC. That
-  means 00:00 on the 1st, 8th, 15th, 22nd and 29th of each month. It's only roughly weekly: the gap from
-  the 29th to the 1st is 2-3 days. Hashing `immich-library-pvc` takes about 1-2 hours per node: on
-  2026-11-01 it took 54 minutes on lorcan and about 1h50m on basima and ilona, all three hashing at once.
-- **Do restarts and upgrades after a checksum run has completed, and before the next 02:00 UTC backup.**
-  The `daily-backup` recurring job runs at 02:00 UTC and finishes by about 02:15. It takes a new
-  snapshot and deletes the previous one (`auto-cleanup-recurring-job-backup-snapshot`). Deleting a
-  snapshot merges its data into a neighbour that has no checksum. (Confirmed on 2026-11-02: by 02:07Z,
-  the 465GiB and 37GiB snapshots checksummed the day before had been merged into new `daily-ba-*`
-  snapshots with no checksum.) With the current schedule, the useful window is the few minutes between
-  hashing finishing (~01:00-02:00) and the backup, so in practice it doesn't exist. Two ways around it:
-  - Move the checksum run to just after the backup. For example, `0 3 * * 6` (Saturdays at 03:00 UTC)
-    gives a window from about 05:00 Saturday to 02:00 Sunday:
-    ```
-    kubectl -n longhorn-system patch settings.longhorn.io snapshot-data-integrity-cronjob --type merge \
-      -p '{"value":"{\"v1\":\"0 3 * * 6\",\"v2\":\"0 3 * * 6\"}"}'
-    ```
-  - For an unplanned restart, start a run by hand. Set the cron to a minute or two from now (for example
-    `"23 16 * * *"` for 16:23 UTC), wait for every large snapshot to show a `sum=` (step 4 of Before you
-    start), then set it back. Do this after the day's backup has finished.
-    Checking `instance-manager` logs on the node shows a run in progress
-    (`Starting hashing snapshot <name>`, then `Snapshot <name> checksum <sum>` when done). A snapshot CR's checksum stays blank until
-    every replica's hash matches.
+- **When checksums are calculated.** The weekly checksum run is Saturday 20:00 UTC
+  (`snapshotDataIntegrityCronjob: "0 20 * * 6"` in `worclustershire-deploy` `apps/longhorn/values.yaml`).
+  Hashing `immich-library-pvc` takes about 1-2 hours per node: on 2026-11-01 it took 54 minutes on lorcan
+  and about 1h50m on basima and ilona, all three hashing at once.
+- **The daily backup removes the checksums.** The `daily-backup` recurring job runs at 16:00 UTC and
+  finishes by about 16:20. It takes a new snapshot and deletes the previous one
+  (`auto-cleanup-recurring-job-backup-snapshot`). Deleting a snapshot merges its data into a neighbour that
+  has no checksum. (Confirmed on 2026-11-02, when the backup still ran at 02:00 UTC: by 02:07Z, the 465GiB
+  and 37GiB snapshots checksummed the day before had been merged into new `daily-ba-*` snapshots with no
+  checksum.) So fast rebuilds are only possible from when the Saturday run finishes until the Sunday
+  16:00 UTC backup. Plan updates for that window: see [updating.md](updating.md).
+- **For an unplanned restart, start a run by hand.** After the day's backup has finished, set the cron to a
+  minute or two from now (for example `23 16 * * *` for 16:23 UTC). Wait for every large snapshot to show a
+  `sum=` (step 4 of Before you start), then set it back to `0 20 * * 6`. The Helm chart now sets this
+  value in the `longhorn-default-setting` ConfigMap, and Longhorn may reapply that over a hand edit. If
+  hashing never starts, check the setting again
+  (`kubectl -n longhorn-system get settings.longhorn.io snapshot-data-integrity-cronjob -o jsonpath='{.value}'`).
+  ```
+  kubectl -n longhorn-system patch settings.longhorn.io snapshot-data-integrity-cronjob --type merge \
+    -p '{"value":"{\"v1\":\"23 16 * * *\",\"v2\":\"23 16 * * *\"}"}'
+  ```
+  `instance-manager` logs on each node show the run's progress (`Starting hashing snapshot <name>`, then
+  `Snapshot <name> checksum <sum>` when done). A snapshot CR's checksum stays blank until every replica's
+  hash matches. See [updating.md](updating.md) → Is the checksum done?
 - Never restart two nodes at once. Every volume has 3 replicas, one per node, so two nodes down leaves a
   single copy.
 
@@ -140,3 +141,4 @@ A plain `qm shutdown && qm start` is not enough, because of two things:
 | 2026-11-01 | worclustershire1 and worclustershire2 restarted to apply `discard=on,ssd=1`. On worclustershire2, the immich-database PDB blocked the drain; `qm shutdown` timed out, `&&` skipped `qm start`, the database's ext4 journal was aborted, and Postgres crash-recovered. This runbook was written from that. |
 | 2026-11-01 | Snapshot checksums started by hand (cron set to `23 16 * * *`, then put back to `0 0 */7 * *`). Hashing the 465GiB immich snapshot took 54 minutes to 1h50m per node.                                                                                                                                     |
 | 2026-11-02 | lorcan/worclustershire2 restarted with checksums in place: `immich-library-pvc` rebuilt in 5 s (00:56:53-00:56:58 UTC).                                                                                                                                                                                   |
+| 2026-11-02 | ilona host rebooted at 01:20 UTC for a package update without a drain. The immich database crash-recovered. All 15 volumes stayed degraded because worclustershire3's disk was under the 25% minimum; after lowering it to 20%, every volume rebuilt by 02:02:46, and immich in 5 s.                      |

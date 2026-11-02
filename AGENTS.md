@@ -137,4 +137,6 @@ On all three, the `local-lvm` thin pool must stay larger than the 800G VM disk, 
 (applied on all three as of 2026-11-01). TRIM still doesn't pass through Talos's LUKS volumes on v1.11
 (`encryption.allowDiscards` needs a newer Talos). Recovery procedure for a full pool is in
 `runbooks/thin-pool-full.md`. Planned VM restarts (drain, single-instance CloudNativePG `nodeMaintenanceWindow`,
-`qm shutdown; qm start`) are in `runbooks/node-restart.md`.
+`qm shutdown; qm start`) are in `runbooks/node-restart.md`. Schedule updates (Proxmox packages, Talos, Kubernetes)
+by `runbooks/updating.md`: Saturday after the weekly Longhorn snapshot checksum, so replica rebuilds take seconds
+rather than an hour.
