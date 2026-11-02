@@ -44,6 +44,8 @@ Based on:
    - Disks:
      - 1st drive: 5G
      - 2nd drive: 500G
+     - On every drive, enable "Discard" and "SSD emulation" (under Advanced)
+     - Keep the total size of all drives *below* the thin pool's size (`pvesm status`, `local-lvm`). Longhorn schedules against the drive size, not the host's free space, so an oversized drive lets a replica rebuild fill the pool and hang the host. See [runbooks/thin-pool-full.md](runbooks/thin-pool-full.md).
    - CPU:
      - Type: Host (all the way at the bottom)
      - Cores: 2

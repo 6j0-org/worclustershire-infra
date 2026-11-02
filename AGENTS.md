@@ -11,15 +11,15 @@ file is either a Talos config patch (plaintext YAML) or a rendered Talos config 
 
 ## Cluster facts
 
-| | |
-|---|---|
-| Nodes | `worclustershire1` 192.168.8.4, `worclustershire2` 192.168.8.5, `worclustershire3` 192.168.8.6 |
-| VIP | 192.168.8.7 / `2603:8001:5800:8cf::7`; gateway 192.168.8.1 |
-| Endpoint | `https://worclustershire.6j0.org:6443` (A record points at all three node IPs) |
-| Topology | All three nodes are control planes that also run workloads (`allowSchedulingOnControlPlanes`) |
-| Networking | Static only — DHCP will break cluster membership when an IP changes |
-| Storage | Longhorn (needs iSCSI + hugepages + bind mount, see `longhorn-patch.yaml`), MetalLB for LoadBalancers |
-| Kubeconfig | `~/.kube/worclustershire`, merged into `~/.kube/config` |
+|            |                                                                                                       |
+| ---------- | ----------------------------------------------------------------------------------------------------- |
+| Nodes      | `worclustershire1` 192.168.8.4, `worclustershire2` 192.168.8.5, `worclustershire3` 192.168.8.6        |
+| VIP        | 192.168.8.7 / `2603:8001:5800:8cf::7`; gateway 192.168.8.1                                            |
+| Endpoint   | `https://worclustershire.6j0.org:6443` (A record points at all three node IPs)                        |
+| Topology   | All three nodes are control planes that also run workloads (`allowSchedulingOnControlPlanes`)         |
+| Networking | Static only — DHCP will break cluster membership when an IP changes                                   |
+| Storage    | Longhorn (needs iSCSI + hugepages + bind mount, see `longhorn-patch.yaml`), MetalLB for LoadBalancers |
+| Kubeconfig | `~/.kube/worclustershire`, merged into `~/.kube/config`                                               |
 
 ## Config layering
 
@@ -125,5 +125,16 @@ Read those comments before editing either workflow — the settings are intentio
 
 ## Host notes
 
-`README.lorcan.md` documents an e1000e NIC hardware hang on the `lorcan` host, worked around with an
-`ethtool -K nic0 tso off gso off` post-up line in `/etc/network/interfaces`.
+Each node is VM 100 on its own single-disk Proxmox host:
+
+| Host     | IP          | VM                 | Notes                                                                                                                          |
+| -------- | ----------- | ------------------ | ------------------------------------------------------------------------------------------------------------------------------ |
+| `basima` | 192.168.8.3 | `worclustershire1` | `README.basima.md`                                                                                                             |
+| `lorcan` | 192.168.8.9 | `worclustershire2` | `README.lorcan.md` - also an e1000e NIC hang worked around with `ethtool -K nic0 tso off gso off` in `/etc/network/interfaces` |
+| `ilona`  | 192.168.8.8 | `worclustershire3` | `README.ilona.md` - the full write-up                                                                                          |
+
+On all three, the `local-lvm` thin pool must stay larger than the 800G VM disk, and `scsi0` has `discard=on,ssd=1`
+(applied on all three as of 2026-11-01). TRIM still doesn't pass through Talos's LUKS volumes on v1.11
+(`encryption.allowDiscards` needs a newer Talos). Recovery procedure for a full pool is in
+`runbooks/thin-pool-full.md`. Planned VM restarts (drain, single-instance CloudNativePG `nodeMaintenanceWindow`,
+`qm shutdown; qm start`) are in `runbooks/node-restart.md`.
