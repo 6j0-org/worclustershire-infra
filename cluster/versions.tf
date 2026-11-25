@@ -1,6 +1,6 @@
 terraform {
   # Kept identical to .opentofu-version by update_opentofu.sh.
-  required_version = "1.13.2"
+  required_version = "1.17.2"
 
   required_providers {
     talos = {
